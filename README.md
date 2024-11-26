@@ -1,2 +1,3 @@
 # Task-Tracker-
-A Simple Task Tarcker which you use it on CLI
+A Simple Task Tarcker which you use it on CLI using python
+
