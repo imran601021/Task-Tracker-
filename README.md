@@ -1,35 +1,36 @@
 # 📋 Task Tracker CLI
 
-A fast, lightweight command-line task manager built with Python. Manage your tasks, set priorities, track progress, and get desktop reminders — all without leaving your terminal.
+A fast, lightweight command-line task manager built with Python. Add tasks interactively, track progress, set priorities, edit tasks with a single keypress, and get desktop reminders — all without leaving your terminal.
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python)
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![Status](https://img.shields.io/badge/Status-Active-brightgreen)
 
 ---
+
 ## 📸 Screenshots
 
 ### Task List View
 ![Task List](screenshots/task_list.png)
 
-### Adding a Task
+### Interactive Add
 ![Add Task](screenshots/add_task.png)
 
-### Filtering by Priority
-![Filter](screenshots/filter_priority.png)
+### Task Detail View
+![Task View](screenshots/task_view.png)
 
 ---
 
 ## ✨ Features
 
-- ✅ Add tasks with start/end times and priority levels
-- 🔄 Track status: `TODO` → `IN_PROGRESS` → `DONE`
-- 🔴🟡🟢 Color-coded priorities: `HIGH`, `MEDIUM`, `LOW`
-- 🔔 Desktop reminder notifications before deadlines
-- 🔍 Filter tasks by status or priority
-- ✏️ Update any task field without deleting and re-adding
-- 💾 Persistent storage via local JSON file
-- 🧪 Full test suite with `pytest`
+- 🧠 **Interactive task creation** — just run `add`, no flags needed
+- ✅ **Status tracking** — `TODO` → `IN_PROGRESS` → `DONE`
+- 🔴🟡🟢 **Color-coded priorities** — `HIGH`, `MEDIUM`, `LOW`
+- 🃏 **Interactive task view** — open any task and edit fields with a single keypress
+- 🔍 **Filter tasks** by status or priority
+- 🔔 **Desktop reminders** — get notified 1 minute before a deadline
+- 💾 **Persistent storage** — tasks saved locally in JSON
+- 🧪 **Full test suite** with `pytest`
 
 ---
 
@@ -38,6 +39,7 @@ A fast, lightweight command-line task manager built with Python. Manage your tas
 - **Python 3.10+**
 - **[Rich](https://github.com/Textualize/rich)** — Beautiful terminal UI
 - **[Plyer](https://github.com/kivy/plyer)** — Cross-platform desktop notifications
+- **[Readchar](https://github.com/magmax/python-readchar)** — Instant keypress detection
 - **[Pytest](https://pytest.org)** — Automated testing
 
 ---
@@ -67,53 +69,105 @@ venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
+**4. Linux users only — install dbus for notifications**
+```bash
+# Arch / Manjaro
+sudo pacman -S python-dbus
+
+# Fedora
+sudo dnf install python3-dbus
+
+# Debian / Ubuntu
+sudo apt install python3-dbus
+```
+
 ---
 
 ## 🚀 Usage
 
-### Add a Task
+### ➕ Add a Task (Interactive)
+Just run `add` — it will guide you step by step. No flags needed!
 ```bash
-python main.py add "Build login page" --start "2025-06-01 09:00" --end "2025-06-01 11:00" --priority HIGH --remind
+python main.py add
+```
+```
+╭──────────────────────────────────╮
+│  Let's create a new task!        │
+╰──────────────────────────────────╯
+
+➤ Task description : Build login page
+➤ Start time       : 2025-06-01 09:00
+➤ End time         : 2025-06-01 11:00
+➤ Priority (H/M/L) : H
+➤ Set reminder?    : y
+
+  Summary:
+  Description : Build login page
+  Priority    : HIGH
+  Reminder    : 🔔 On
+
+➤ Confirm? (y/n) : y
+
+✔ Task added (ID: 1, Priority: HIGH)
 ```
 
-### List All Tasks
+### 📋 List All Tasks
 ```bash
 python main.py list
 ```
 
-### Filter by Status or Priority
+### 🔍 Filter Tasks
 ```bash
 python main.py list --status TODO
+python main.py list --status IN_PROGRESS
 python main.py list --priority HIGH
 ```
 
-### Update Task Status
+### 🃏 View & Edit a Task Interactively
+Open a task card and edit any field with a single keypress — no flags, no re-typing commands.
+```bash
+python main.py view 1
+```
+```
+╭─────────── 📋 Task #1 ────────────╮
+│  Description : Build login page   │
+│  Status      : TODO               │
+│  Priority    : HIGH               │
+│  Start Time  : 2025-06-01 09:00   │
+│  End Time    : 2025-06-01 11:00   │
+│  Reminder    : 🔔 On              │
+╰───────────────────────────────────╯
+
+  [d]  Edit Description
+  [s]  Change Status
+  [p]  Change Priority
+  [t]  Edit Times
+  [r]  Toggle Reminder
+  [x]  Delete Task
+  [q]  Quit
+```
+
+### 🔄 Update Task Status
 ```bash
 python main.py status 1 IN_PROGRESS
 python main.py status 1 DONE
 ```
 
-### Mark a Task Complete (Shortcut)
+### ✅ Mark a Task Complete (Shortcut)
 ```bash
 python main.py complete 1
 ```
 
-### Edit a Task
-```bash
-python main.py update 1 --description "New description" --priority LOW
-python main.py update 1 --end "2025-06-01 15:00"
-```
-
-### Delete a Task
+### 🗑 Delete a Task
 ```bash
 python main.py delete 1
 ```
 
-### Start Notification Service
+### 🔔 Start Notification Service
 ```bash
 python main.py notify
 ```
-> Runs in the background and sends a desktop alert 1 minute before any task deadline.
+> Runs in the background and sends a desktop alert 1 minute before any task deadline. Press `Ctrl+C` to stop.
 
 ---
 
@@ -147,15 +201,16 @@ Expected output:
 ## 📌 Commands Reference
 
 | Command | Description |
-|--------|-------------|
-| `add` | Add a new task |
-| `list` | List all tasks (supports `--status`, `--priority` filters) |
+|---------|-------------|
+| `add` | Add a new task (interactive, no flags needed) |
+| `list` | List all tasks |
+| `list --status TODO` | Filter by status (`TODO`, `IN_PROGRESS`, `DONE`) |
+| `list --priority HIGH` | Filter by priority (`HIGH`, `MEDIUM`, `LOW`) |
+| `view <id>` | Open interactive task card — edit with keypresses |
 | `status <id> <STATUS>` | Update task status |
 | `complete <id>` | Mark task as DONE |
-| `update <id>` | Edit task fields |
 | `delete <id>` | Delete a task |
 | `notify` | Start desktop notification service |
-|  `View`  | View the Task and edit it          | 
 
 ---
 
