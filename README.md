@@ -155,6 +155,7 @@ Expected output:
 | `update <id>` | Edit task fields |
 | `delete <id>` | Delete a task |
 | `notify` | Start desktop notification service |
+| 'View'   | View the Task and edit it          | 
 
 ---
 
