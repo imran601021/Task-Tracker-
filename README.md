@@ -7,7 +7,6 @@ A fast, lightweight command-line task manager built with Python. Manage your tas
 ![Status](https://img.shields.io/badge/Status-Active-brightgreen)
 
 ---
-
 ## 📸 Screenshots
 
 ### Task List View
